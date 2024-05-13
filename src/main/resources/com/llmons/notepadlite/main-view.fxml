@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.llmons.notepadlite.MainController">
+    <bottom>
+        <HBox alignment="CENTER" prefHeight="32.0" prefWidth="980.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text fx:id="RowColumn" strokeType="OUTSIDE" strokeWidth="0.0" text="行1，列1" />
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" layoutX="738.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text fx:id="numOfCh" strokeType="OUTSIDE" strokeWidth="0.0" text="字符数：0" />
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" layoutX="512.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Text fx:id="chEncoding" strokeType="OUTSIDE" strokeWidth="0.0" text="UTF-8" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </bottom>
+    <center>
+        <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" BorderPane.alignment="CENTER">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#cutEvent" text="剪切" />
+                        <MenuItem mnemonicParsing="false" onAction="#copyEvent" text="复制" />
+                        <MenuItem mnemonicParsing="false" onAction="#pasteEvent" text="粘贴" />
+                        <MenuItem mnemonicParsing="false" onAction="#deleteEvent" text="删除" />
+                        <MenuItem mnemonicParsing="false" onAction="#selectAllEvent" text="全选" />
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextArea>
+    </center>
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="文件">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#createEvent" text="新建" />
+                        <MenuItem mnemonicParsing="false" onAction="#openEvent" text="打开" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveEvent" text="保存" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsEvent" text="另存为" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="编辑">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#undoEvent" text="撤销" />
+                        <MenuItem mnemonicParsing="false" onAction="#redoEvent" text="重做" />
+                        <MenuItem mnemonicParsing="false" onAction="#findEvent" text="查找" />
+                        <MenuItem mnemonicParsing="false" onAction="#replaceEvent" text="替换" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="选项">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#fontEvent" text="字体" />
+                        <CheckMenuItem mnemonicParsing="false" onAction="#wrapText" selected="true" text="自动换行" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="帮助">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#aboutEvent" text="关于" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+</BorderPane>
