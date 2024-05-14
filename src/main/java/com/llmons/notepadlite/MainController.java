@@ -85,7 +85,6 @@ public class MainController {
         });
 
         chEncoding.setText("UTF-8");
-
     }
 
     // ******************** 文件菜单事件 ********************
@@ -116,16 +115,17 @@ public class MainController {
 
         // 创建新窗口
         FXMLLoader fxmlLoader = new FXMLLoader(NotePadLiteApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         Stage newStage = new Stage();
-        newStage.setTitle("无标题*");
+        newStage.setTitle("无标题");
         newStage.setScene(scene);
         NotePadLiteApplication.primaryStage = newStage;
+
         newStage.show();
     }
 
     @FXML
-    void openEvent() {
+    void openEvent() throws IOException {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Text File", "*.txt");
         fileChooser.getExtensionFilters().add(extensionFilter);
@@ -134,6 +134,8 @@ public class MainController {
         if (file == null) return;
 
         filePath = file.getAbsolutePath();
+        chEncoding.setText(getFileCharsetName(filePath));
+
         // 字符流读取
         try (Reader reader = new FileReader(file)) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -146,12 +148,16 @@ public class MainController {
             alert.setContentText("文件打开错误");
         }
         NotePadLiteApplication.primaryStage.setTitle(file.getName());
+
         savedP.setValue(true);
     }
 
     @FXML
     void saveEvent() {
-        if (filePath == null) return; // saveEvent依靠的是当前路径，需要保证不空
+        if (filePath == null) {
+            saveAsEvent();
+            return;
+        } // saveEvent依靠的是当前路径，需要保证不空
 
         File file = new File(filePath);
         try (Writer writer = new FileWriter(file)) {
@@ -328,4 +334,16 @@ public class MainController {
         textArea.selectAll();
     }
 
+    String getFileCharsetName(String fileName) throws IOException {
+        BufferedInputStream bin = new BufferedInputStream(new FileInputStream(fileName));
+        int p = (bin.read() << 8) + bin.read();
+        bin.close();
+
+        return switch (p) {
+            case 0xefbb -> "UTF-8";
+            case 0xfffe -> "Unicode";
+            case 0xfeff -> "UTF-16BE";
+            default -> "GBK";
+        };
+    }
 }

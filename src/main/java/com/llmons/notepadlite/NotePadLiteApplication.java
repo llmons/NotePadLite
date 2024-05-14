@@ -48,7 +48,7 @@ public class NotePadLiteApplication extends Application {
             } else if (result.isPresent() && result.get() == cancel) windowEvent.consume();  // 点击取消，停留在当前页面
 
         });
-
+        
         stage.show();
     }
 }

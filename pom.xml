@@ -38,6 +38,36 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- ********** 添加第三方jar进行文件字符编码检测 ********** -->
+        <!-- cpdetector 检测文件编码格式 -->
+        <dependency>
+            <groupId>cpdetector</groupId>
+            <artifactId>cpdetector</artifactId>
+            <version>1.0.10</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/cpdetector_1.0.10.jar</systemPath>
+        </dependency>
+
+        <!-- cpdetector 的插件 chardet -->
+        <dependency>
+            <groupId>chardet</groupId>
+            <artifactId>chardet</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/chardet-1.0.jar</systemPath>
+        </dependency>
+
+        <!-- cpdetector 的插件 antlr -->
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>2.7.4</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/antlr-2.7.4.jar</systemPath>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -74,3 +104,4 @@
         </plugins>
     </build>
 </project>
+
