@@ -91,23 +91,7 @@ public class MainController {
     @FXML
     void createEvent() throws IOException {
         // 未保存时的操作
-        if (!savedP.get()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle(null);
-            alert.setHeaderText(null);
-            alert.setContentText("文件未保存，是否保存？");
-
-            ButtonType save = new ButtonType("保存");
-            ButtonType unSave = new ButtonType("不保存");
-            ButtonType cancel = new ButtonType("取消");
-            alert.getButtonTypes().setAll(save, unSave, cancel);
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == save) {
-                if (filePath == null) saveAsEvent();  //如果没路径，则应调用‘另存为’
-                else saveEvent();   //否则直接保存
-            } else if (result.isPresent() && result.get() == cancel) return;  // 点击取消，停留在当前页面
-        }
+        if (judgeSave()) return;
 
         // 关闭当前窗口
         Stage currStage = NotePadLiteApplication.primaryStage;
@@ -126,6 +110,8 @@ public class MainController {
 
     @FXML
     void openEvent() throws IOException {
+        if (judgeSave()) return;
+
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Text File", "*.txt");
         fileChooser.getExtensionFilters().add(extensionFilter);
@@ -152,11 +138,37 @@ public class MainController {
         savedP.setValue(true);
     }
 
+    /*
+     * 返回值为true时表示不关闭窗口，false则关闭窗口
+     * @param null
+     * @return boolean
+     * */
+    private boolean judgeSave() {
+        if (!savedP.get()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle(null);
+            alert.setHeaderText(null);
+            alert.setContentText("文件未保存，是否保存？");
+
+            ButtonType save = new ButtonType("保存");
+            ButtonType unSave = new ButtonType("不保存");
+            ButtonType cancel = new ButtonType("取消");
+            alert.getButtonTypes().setAll(save, unSave, cancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == save) {
+                if (filePath == null) {
+                    return saveAsEvent();
+                } else saveEvent();   //否则直接保存
+            } else return result.isPresent() && result.get() == cancel;
+        }
+        return false;
+    }
+
     @FXML
-    void saveEvent() {
+    boolean saveEvent() {
         if (filePath == null) {
-            saveAsEvent();
-            return;
+            return saveAsEvent();
         } // saveEvent依靠的是当前路径，需要保证不空
 
         File file = new File(filePath);
@@ -171,22 +183,26 @@ public class MainController {
             alert.setHeaderText(null);
             alert.setContentText("文件写入错误");
         }
+
+        return true;
     }
 
     @FXML
-    void saveAsEvent() {
+    boolean saveAsEvent() {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Text File", "*.txt");
         fileChooser.getExtensionFilters().add(extensionFilter);
 
         File file = fileChooser.showSaveDialog(NotePadLiteApplication.primaryStage);
-        if (file == null) return;
+        if (file == null) return false;
 
         // 由于‘另存为’操作结束后，窗口仍需停留，filePath应当先暂存，调用saveEvent()后再还原
         String currPath = filePath;   // 暂存当前路径
         filePath = file.getAbsolutePath();
         saveEvent();
         filePath = currPath;  // 还原
+
+        return true;
     }
 
     // ******************** 编辑菜单事件 ********************
